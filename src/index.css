@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+/* FUENTES */
+@font-face {
+    font-family: 'Saira';
+    src: url('./assets/fonts/Saira/Saira-VariableFont_wdth,wght.ttf') format('truetype');
+    font-weight: 100 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Digital7 Mono';
+    src: url('./assets/fonts/digital-7/digital-7_mono.ttf') format('truetype');
+    font-style: normal;
+}
+
+@theme {
+    --font-saira: "Saira", sans-serif;
+    --font-digital: "Digital7 Mono", monospace;
+
+    --color-mines-blue: #01475E;
+    --color-mines-blue-light: #EAEEEF;
+    --color-mines-grey-dark: #aaaaaa;
+    --color-mines-grey: #b1b1b1;
+    --color-mines-grey-light: #d1d1d1;
+    --color-mines-grey-superlight: #e1e1e1;
+    --color-mines-white: #fafafa;
+
+    --breakpoint-tablet: 768px;
+    --breakpoint-desktop: 1200px;
+}
+
+@layer base {
+    html * {
+        font-family: var(--font-saira);
+        font-weight: 400;
+        font-style: normal;
+    }
+
+    body {
+        @apply m-0 p-0 bg-slate-100 min-h-screen overflow-x-hidden;
+    }
+}
+
+@utility border-cell-normal {
+    border-top: solid 2px var(--color-mines-grey-light);
+    border-right: solid 2px var(--color-mines-grey-light);
+    border-bottom: solid 2px var(--color-mines-grey-dark);
+    border-left: solid 2px var(--color-mines-grey-dark);
+}
+
+@utility border-grid-main {
+    border-top: solid 5px var(--color-mines-grey-light);
+    border-right: solid 5px var(--color-mines-grey-light);
+    border-bottom: solid 5px var(--color-mines-grey);
+    border-left: solid 5px var(--color-mines-grey);
+}
