@@ -14,12 +14,11 @@ export const Cell = ({ cell, onClick, onContextMenu }) => {
   const handleTouchStart = (e) => {
     if (cell.isRevealed) return;
     if (e.cancelable) e.preventDefault(); 
-
     if (!timerRef.current) {
       timerRef.current = setTimeout(() => {
         onClick(); 
         timerRef.current = null;
-      }, 250); // <--- TUS 250ms RESPETADOS
+      }, 250); // Margen de 250ms
     } else {
       clearTimeout(timerRef.current);
       timerRef.current = null;
@@ -28,9 +27,7 @@ export const Cell = ({ cell, onClick, onContextMenu }) => {
   };
 
   const handlePointerUp = (e) => {
-    if (e.pointerType === 'mouse' && e.button === 0) {
-      onClick();
-    }
+    if (e.pointerType === 'mouse' && e.button === 0) onClick();
   };
 
   return (
@@ -39,7 +36,7 @@ export const Cell = ({ cell, onClick, onContextMenu }) => {
       onContextMenu={onContextMenu}
       onTouchStart={handleTouchStart}
       className={`
-        w-full tablet:w-[30px] h-full tablet:h-[30px] aspect-square
+        w-full h-full aspect-square tablet:w-7.5 tablet:h-7.5
         flex items-center justify-center text-xl select-none leading-none
         ${cell.isRevealed 
           ? 'bg-mines-white border border-mines-grey-light' 
@@ -53,14 +50,14 @@ export const Cell = ({ cell, onClick, onContextMenu }) => {
     >
       {cell.isRevealed ? (
         cell.hasMine ? (
-          <img src={mineIcon} className="w-[65%] h-[65%]" alt="mine" />
+          <img src={mineIcon} className="w-4.5 h-4.5" alt="mine" />
         ) : (
           cell.neighbors || ''
         )
       ) : (
         <>
-          {cell.hasFlag && <img src={flagIcon} className="w-[65%] h-[65%]" alt="flag" />}
-          {cell.hasQuestion && <img src={markIcon} className="w-[65%] h-[65%]" alt="mark" />}
+          {cell.hasFlag && <img src={flagIcon} className="w-4.5 h-4.5" alt="flag" />}
+          {cell.hasQuestion && <img src={markIcon} className="w-4.5 h-4.5" alt="mark" />}
         </>
       )}
     </div>

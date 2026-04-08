@@ -5,25 +5,30 @@ export const LEVELS = {
 };
 
 export const createNewBoard = (rows, cols, mines) => {
-    let cells = [];
-    for (let i = 0; i < rows * cols; i++) {
-        cells.push({
-            id: i,
-            row: Math.floor(i / cols),
-            col: i % cols,
-            hasMine: false,
-            isRevealed: false,
-            hasFlag: false,
-            hasQuestion: false,
-            neighbors: 0
-        });
-    }
+    let cells = Array.from({ length: rows * cols }, (_, i) => ({
+        id: i,
+        row: Math.floor(i / cols),
+        col: i % cols,
+        hasMine: false,
+        isRevealed: false,
+        hasFlag: false,
+        hasQuestion: false,
+        neighbors: 0
+    }));
+
+    // Algoritmo de Fisher-Yates (Tu lógica original que SI funciona)
     let positions = Array.from({ length: rows * cols }, (_, i) => i);
     for (let i = positions.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [positions[i], positions[j]] = [positions[j], positions[i]];
     }
-    positions.slice(0, mines).forEach(pos => cells[pos].hasMine = true);
+
+    // Seleccionamos las primeras N posiciones barajadas
+    positions.slice(0, mines).forEach(pos => {
+        cells[pos].hasMine = true;
+    });
+
+    // Calcular números de minas adyacentes
     return cells.map(cell => {
         if (cell.hasMine) return cell;
         let count = 0;
@@ -37,4 +42,22 @@ export const createNewBoard = (rows, cols, mines) => {
         }
         return { ...cell, neighbors: count };
     });
+};
+
+export const expandRecursive = (newBoard, cellId, rows, cols) => {
+    const cell = newBoard[cellId];
+    if (cell.isRevealed || cell.hasFlag || cell.hasQuestion) return;
+
+    newBoard[cellId].isRevealed = true;
+
+    if (cell.neighbors === 0) {
+        for (let r = -1; r <= 1; r++) {
+            for (let c = -1; c <= 1; c++) {
+                const nr = cell.row + r, nc = cell.col + c;
+                if (nr >= 0 && nr < rows && nc >= 0 && nc < cols) {
+                    expandRecursive(newBoard, nr * cols + nc, rows, cols);
+                }
+            }
+        }
+    }
 };
