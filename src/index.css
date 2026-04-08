@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-/* FUENTES */
 @font-face {
     font-family: 'Saira';
     src: url('./assets/fonts/Saira/Saira-VariableFont_wdth,wght.ttf') format('truetype');
@@ -17,7 +16,6 @@
 @theme {
     --font-saira: "Saira", sans-serif;
     --font-digital: "Digital7 Mono", monospace;
-
     --color-mines-blue: #01475E;
     --color-mines-blue-light: #EAEEEF;
     --color-mines-grey-dark: #aaaaaa;
@@ -25,7 +23,6 @@
     --color-mines-grey-light: #d1d1d1;
     --color-mines-grey-superlight: #e1e1e1;
     --color-mines-white: #fafafa;
-
     --breakpoint-tablet: 768px;
     --breakpoint-desktop: 1200px;
 }
@@ -36,7 +33,6 @@
         font-weight: 400;
         font-style: normal;
     }
-
     body {
         @apply m-0 p-0 bg-slate-100 min-h-screen overflow-x-hidden;
     }

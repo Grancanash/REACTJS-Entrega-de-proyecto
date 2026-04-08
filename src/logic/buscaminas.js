@@ -18,14 +18,12 @@ export const createNewBoard = (rows, cols, mines) => {
             neighbors: 0
         });
     }
-
     let positions = Array.from({ length: rows * cols }, (_, i) => i);
     for (let i = positions.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [positions[i], positions[j]] = [positions[j], positions[i]];
     }
     positions.slice(0, mines).forEach(pos => cells[pos].hasMine = true);
-
     return cells.map(cell => {
         if (cell.hasMine) return cell;
         let count = 0;

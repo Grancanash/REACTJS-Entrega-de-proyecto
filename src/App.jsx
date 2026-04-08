@@ -12,13 +12,10 @@ function App() {
   const [time, setTime] = useState(0);
   const [showInstructions, setShowInstructions] = useState(false);
   const [records, setRecords] = useState(() => JSON.parse(localStorage.getItem('buscaminas_records')) || {});
-
   const topRef = useRef(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowInstructions(true);
-    }, 100); 
+    const timer = setTimeout(() => setShowInstructions(true), 100); 
     return () => clearTimeout(timer);
   }, []);
 
@@ -30,9 +27,7 @@ function App() {
 
   useEffect(() => {
     if (gameState === 'won' || gameState === 'lost') {
-      setTimeout(() => {
-        topRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 100);
+      setTimeout(() => topRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
     }
   }, [gameState]);
 
@@ -40,7 +35,6 @@ function App() {
     const isMobile = window.innerWidth < 768;
     const config = LEVELS[levelId];
     const [rows, cols, mines] = isMobile ? config.mobile : config.desktop;
-
     setGridConfig({ rows, cols, initialMines: mines });
     setBoard(createNewBoard(rows, cols, mines));
     setLevel(levelId);
@@ -51,7 +45,6 @@ function App() {
 
   const handleReveal = (id) => {
     if (gameState !== 'playing' || board[id].isRevealed || board[id].hasFlag || board[id].hasQuestion) return;
-    
     let newBoard = [...board];
     if (newBoard[id].hasMine) {
       setGameState('lost');
@@ -63,23 +56,21 @@ function App() {
       if (newBoard[cellId].isRevealed || newBoard[cellId].hasFlag) return;
       newBoard[cellId].isRevealed = true;
       if (newBoard[cellId].neighbors === 0) {
+        const { rows, cols } = gridConfig;
         const cell = newBoard[cellId];
         for (let r = -1; r <= 1; r++) {
           for (let c = -1; c <= 1; c++) {
             const nr = cell.row + r, nc = cell.col + c;
-            if (nr >= 0 && nr < gridConfig.rows && nc >= 0 && nc < gridConfig.cols) 
-              floodFill(nr * gridConfig.cols + nc);
+            if (nr >= 0 && nr < rows && nc >= 0 && nc < cols) floodFill(nr * cols + nc);
           }
         }
       }
     };
     floodFill(id);
     setBoard(newBoard);
-    const totalCells = gridConfig.rows * gridConfig.cols;
-    const revealedCount = newBoard.filter(c => c.isRevealed).length;
-    if (revealedCount === totalCells - gridConfig.initialMines) {
+    if (newBoard.filter(c => c.isRevealed).length === (gridConfig.rows * gridConfig.cols) - gridConfig.initialMines) {
       setGameState('won');
-      saveRecord(totalCells);
+      saveRecord(gridConfig.rows * gridConfig.cols);
     }
   };
 
@@ -106,12 +97,8 @@ function App() {
   return (
     <div className="w-full flex justify-center">
       <main ref={topRef} className="w-full max-w-250 flex flex-col items-center p-4 desktop:mt-12.5">
-        
         <Dashboard 
-          minesLeft={minesLeft} 
-          time={time} 
-          records={records} 
-          gameState={gameState}
+          minesLeft={minesLeft} time={time} records={records} gameState={gameState}
           onResetRecords={() => { localStorage.removeItem('buscaminas_records'); setRecords({}); }}
           onShowInstructions={() => setShowInstructions(true)}
           onNewGame={() => setLevel(null)}
@@ -141,11 +128,11 @@ function App() {
         <div className={`fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50 transition-all duration-500 ${showInstructions ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
           <div className="bg-white p-8 rounded-lg shadow-2xl max-w-md w-full border-t-8 border-mines-blue text-center">
             <h2 className="text-2xl font-bold mb-6 text-mines-blue uppercase tracking-tighter">Cómo jugar</h2>
-            <ul className="text-left text-slate-600 space-y-2 text-lg font-semibold mb-12">
-              <li>• Haz clic para descubrir una casilla.</li>
-              <li>• Evita las minas ocultas.</li>
-              <li>• Los números indican minas alrededor.</li>
-              <li>• Clic derecho para bandera o interrogante.</li>
+            <ul className="text-left text-slate-600 space-y-2 text-lg font-semibold mb-12 list-disc pl-6">
+              <li>Haz clic para descubrir una casilla.</li>
+              <li>Evita las minas ocultas.</li>
+              <li>Los números indican minas alrededor.</li>
+              <li>Clic derecho para marcar la celda con banderas o interrogantes (Doble click en pantallas táctiles).</li>
             </ul>
             <button onClick={() => setShowInstructions(false)} className="w-full bg-mines-blue text-white py-4 rounded font-bold cursor-pointer uppercase tracking-tight">Aceptar</button>
           </div>
