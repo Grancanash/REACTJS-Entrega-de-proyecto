@@ -16,7 +16,7 @@ export const createNewBoard = (rows, cols, mines) => {
         neighbors: 0
     }));
 
-    // Algoritmo de Fisher-Yates (Tu lógica original que SI funciona)
+    // Algoritmo de Fisher-Yates
     let positions = Array.from({ length: rows * cols }, (_, i) => i);
     for (let i = positions.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
