@@ -58,7 +58,7 @@ export const Cell = ({ cell, onClick, onContextMenu }) => {
       timerRef.current = setTimeout(() => {
         onClick(); // Revelar
         timerRef.current = null;
-      }, 250); // Tu tiempo de 250ms
+      }, 200); // Tu tiempo de 250ms
     } else {
       // SEGUNDO TOQUE (Doble tap para bandera)
       clearTimeout(timerRef.current);
