@@ -1,7 +1,7 @@
 export const LEVELS = {
     1: { name: "Principiante", desktop: [9, 9, 10], mobile: [9, 9, 10] },
     2: { name: "Intermedio", desktop: [16, 16, 40], mobile: [32, 8, 40] },
-    3: { name: "Experto", desktop: [16, 30, 99], mobile: [60, 8, 99] },
+    3: { name: "Experto", desktop: [16, 30, 99], mobile: [70, 8, 99] },
 };
 
 export const createNewBoard = (rows, cols, mines) => {
