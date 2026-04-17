@@ -63,10 +63,10 @@ export const Dashboard = ({
             <span>9x9:</span> <span className="font-digital text-slate-500 text-3xl tracking-tighter">{formatTime(records.cells_81 || 0)}</span>
           </div>
           <div className="flex justify-between items-center border-b border-slate-200">
-            <span>16x16:</span> <span className="font-digital text-slate-500 text-3xl tracking-tighter">{formatTime(records.cells_256 || 0)}</span>
+            <span>16x16 (32x8):</span> <span className="font-digital text-slate-500 text-3xl tracking-tighter">{formatTime(records.cells_256 || 0)}</span>
           </div>
           <div className="flex justify-between items-center">
-            <span>16x30:</span> <span className="font-digital text-slate-500 text-3xl tracking-tighter">{formatTime(records.cells_480 || 0)}</span>
+            <span>16x30 (70x8):</span> <span className="font-digital text-slate-500 text-3xl tracking-tighter">{formatTime(records.cells_480 || 0)}</span>
           </div>
         </div>
       </div>
