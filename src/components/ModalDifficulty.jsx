@@ -1,5 +1,3 @@
-import React from 'react';
-
 export const ModalDifficulty = ({ isOpen, levels, onSelectLevel, isMobile }) => {
     return (
         <div className={`fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-40 transition-all duration-500 ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
@@ -14,7 +12,7 @@ export const ModalDifficulty = ({ isOpen, levels, onSelectLevel, isMobile }) => 
                 {config.name}
                 <br />
                 <span className="text-lg font-normal opacity-60 normal-case">
-                {isMobile ? `${config.mobile[0]}x${config.mobile[1]}` : `${config.desktop[0]}x${config.desktop[1]}`} celdas
+                    {isMobile ? `${config.mobile[0]}x${config.mobile[1]}` : `${config.desktop[0]}x${config.desktop[1]}`} celdas
                 </span>
             </button>
             ))}

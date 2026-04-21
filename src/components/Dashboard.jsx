@@ -1,5 +1,6 @@
-import React from 'react';
 import resetIcon from '../assets/img/reset.svg';
+import { LEVELS } from '../logic/buscaminas';
+
 
 export const Dashboard = ({ 
   minesLeft, 
@@ -17,6 +18,12 @@ export const Dashboard = ({
   };
 
   const isPlaying = gameState === 'playing' || gameState === 'waiting';
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
+  const rows2 = isMobile ? LEVELS[2]['mobile'][0] : LEVELS[2]['desktop'][0];
+  const cols2 = isMobile ? LEVELS[2]['mobile'][1] : LEVELS[2]['desktop'][1];
+  const rows3 = isMobile ? LEVELS[3]['mobile'][0] : LEVELS[3]['desktop'][0];
+  const cols3 = isMobile ? LEVELS[3]['mobile'][1] : LEVELS[3]['desktop'][1];
 
   return (
     <header className="flex flex-col tablet:flex-row gap-2 tablet:gap-1 mb-8 w-full">
@@ -63,10 +70,10 @@ export const Dashboard = ({
             <span>9x9:</span> <span className="font-digital text-slate-500 text-3xl tracking-tighter">{formatTime(records.cells_81 || 0)}</span>
           </div>
           <div className="flex justify-between items-center border-b border-slate-200">
-            <span>16x16 (32x8):</span> <span className="font-digital text-slate-500 text-3xl tracking-tighter">{formatTime(records.cells_256 || 0)}</span>
+            <span>{`${rows2}x${cols2}`}:</span> <span className="font-digital text-slate-500 text-3xl tracking-tighter">{formatTime(records["cells_" + (rows2*cols2)] || 0)}</span>
           </div>
           <div className="flex justify-between items-center">
-            <span>16x30 (70x8):</span> <span className="font-digital text-slate-500 text-3xl tracking-tighter">{formatTime(records.cells_480 || 0)}</span>
+            <span>{`${rows3}x${cols3}`}:</span> <span className="font-digital text-slate-500 text-3xl tracking-tighter">{formatTime(records["cells_" + (rows3*cols3)] || 0)}</span>
           </div>
         </div>
       </div>
