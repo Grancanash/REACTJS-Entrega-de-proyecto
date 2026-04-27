@@ -1,3 +1,5 @@
+<img src="./docs/hero_buscaminas.jpg" width="100%" alt="BASIC CRM Hero Header">
+
 # REACTJS Entrega de proyecto - Buscaminas
 
 Este proyecto es la evolución de un juego de **Buscaminas** desarrollado [originalmente en JavaScript nativo](https://github.com/Grancanash/buscaminas), ahora reconstruido íntegramente utilizando **React** y **Tailwind CSS v4**. El objetivo principal ha sido la **modularización** del código y la optimización de la experiencia de usuario (UX) tanto en escritorio como en dispositivos móviles.
