@@ -39,19 +39,19 @@ export const Dashboard = ({
       </div>
 
       {/* CENTRO: INFO/RESULTADO */}
-      <div className="w-full tablet:flex-1 bg-mines-blue-light border border-mines-grey-light rounded-md min-h-40 tablet:h-50 relative overflow-hidden text-center">
-        <div className={`absolute inset-0 flex flex-col items-center justify-center transition-all duration-500 ${isPlaying ? 'opacity-100' : 'opacity-0 pointer-events-none translate-y-4'}`}>
-          <div className="text-left">
-            <p className="flex items-center text-lg font-semibold text-slate-700 uppercase leading-none">MINAS RESTANTES: 
-              <span className="font-digital text-black text-5xl ml-4 leading-none">{minesLeft}</span>
-            </p>
-            <p className="flex items-center text-lg font-semibold text-slate-700 mt-4 uppercase leading-none">TIEMPO: 
-              <span className="font-digital text-black text-5xl ml-4 leading-none">{formatTime(time)}</span>
-            </p>
-          </div>
+      <div className="w-full tablet:flex-1 bg-mines-blue-light border border-mines-grey-light rounded-md min-h-40 tablet:h-50 flex flex-col items-center justify-center text-center gap-1 px-4">
+        {/* Estadísticas siempre visibles */}
+        <div className="text-left">
+          <p className="flex items-center text-lg font-semibold text-slate-700 uppercase leading-none">MINAS RESTANTES:
+            <span className={`font-digital text-black ml-4 leading-none transition-all duration-500 ${!isPlaying ? 'text-3xl' : 'text-5xl'}`}>{minesLeft}</span>
+          </p>
+          <p className="flex items-center text-lg font-semibold text-slate-700 mt-4 uppercase leading-none">TIEMPO:
+            <span className={`font-digital text-black ml-4 leading-none transition-all duration-500 ${!isPlaying ? 'text-3xl' : 'text-5xl'}`}>{formatTime(time)}</span>
+          </p>
         </div>
-        <div className={`absolute inset-0 flex flex-col items-center justify-center transition-all duration-500 ${!isPlaying ? 'opacity-100' : 'opacity-0 pointer-events-none -translate-y-4'}`}>
-          <h3 className={`text-3xl font-bold uppercase tracking-tighter mb-4 ${gameState === 'won' ? 'text-green-800' : 'text-red-600'}`}>
+        {/* Resultado — solo visible al terminar partida */}
+        <div className={`transition-all duration-500 overflow-hidden ${!isPlaying ? 'opacity-100 max-h-24 mt-3' : 'opacity-0 max-h-0'}`}>
+          <h3 className={`text-2xl font-bold uppercase tracking-tighter mb-2 ${gameState === 'won' ? 'text-green-800' : 'text-red-600'}`}>
             {gameState === 'won' ? '¡Enhorabuena!' : '¡Has fallado!'}
           </h3>
           <button onClick={onNewGame} className="bg-white border border-slate-300 px-6 py-2 rounded text-slate-800 font-bold hover:bg-slate-50 transition-all shadow-sm cursor-pointer uppercase text-sm">

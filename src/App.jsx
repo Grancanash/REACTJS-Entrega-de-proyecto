@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { LEVELS, createNewBoard, expandRecursive } from './logic/buscaminas';
 import { Cell } from './components/Cell';
 import { Dashboard } from './components/Dashboard';
@@ -46,45 +46,54 @@ function App() {
     setTime(0);
   };
 
-  const handleReveal = (id) => {
+  // Refs sincronizadas vía useEffect para evitar mutaciones durante el render (React 19)
+  const timeRef = useRef(time);
+  const recordsRef = useRef(records);
+
+  useEffect(() => {
+    timeRef.current = time;
+  }, [time]);
+
+  useEffect(() => {
+    recordsRef.current = records;
+  }, [records]);
+
+  const handleReveal = useCallback((id) => {
     if (gameState !== 'playing' || board[id].isRevealed || board[id].hasFlag || board[id].hasQuestion) return;
     
-    let newBoard = [...board];
+    // Clonar celdas para evitar mutaciones del estado original (necesario para React.memo)
+    let newBoard = board.map(c => ({...c}));
     if (newBoard[id].hasMine) {
       setGameState('lost');
       newBoard.forEach(c => { if (c.hasMine) c.isRevealed = true; });
     } else {
       expandRecursive(newBoard, id, gridConfig.rows, gridConfig.cols);
-      // Verificar victoria
       const totalCells = gridConfig.rows * gridConfig.cols;
       const revealedCount = newBoard.filter(c => c.isRevealed).length;
       if (revealedCount === totalCells - gridConfig.initialMines) {
         setGameState('won');
-        saveRecord(totalCells);
+        const key = `cells_${totalCells}`;
+        if (!recordsRef.current[key] || timeRef.current < recordsRef.current[key]) {
+          const nr = { ...recordsRef.current, [key]: timeRef.current };
+          setRecords(nr);
+          localStorage.setItem('buscaminas_records', JSON.stringify(nr));
+        }
       }
     }
     setBoard(newBoard);
-  };
+  }, [gameState, board, gridConfig]);
 
-  const handleContextMenu = (e, id) => {
+  const handleContextMenu = useCallback((e, id) => {
     e.preventDefault();
     if (gameState !== 'playing' || board[id].isRevealed) return;
     let newBoard = [...board];
+    newBoard[id] = {...newBoard[id]};
     const cell = newBoard[id];
     if (!cell.hasFlag && !cell.hasQuestion) { cell.hasFlag = true; setMinesLeft(p => p - 1); }
     else if (cell.hasFlag) { cell.hasFlag = false; cell.hasQuestion = true; setMinesLeft(p => p + 1); }
     else { cell.hasQuestion = false; }
     setBoard(newBoard);
-  };
-
-  const saveRecord = (totalCells) => {
-    const key = `cells_${totalCells}`;
-    if (!records[key] || time < records[key]) {
-      const nr = { ...records, [key]: time };
-      setRecords(nr);
-      localStorage.setItem('buscaminas_records', JSON.stringify(nr));
-    }
-  };
+  }, [gameState, board]);
 
   return (
     <div className="w-full flex justify-center">
@@ -100,7 +109,7 @@ function App() {
           {level && (
             <div className="border-grid-main grid gap-0 w-full tablet:w-fit" style={{ gridTemplateColumns: isMobile ? `repeat(${gridConfig.cols}, minmax(0, 1fr))` : `repeat(${gridConfig.cols}, 1.875rem)` }}>
               {board.map(cell => (
-                <Cell key={cell.id} cell={cell} onClick={() => handleReveal(cell.id)} onContextMenu={(e) => handleContextMenu(e, cell.id)} />
+                <Cell key={cell.id} cell={cell} onReveal={handleReveal} onFlag={handleContextMenu} />
               ))}
             </div>
           )}

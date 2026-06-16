@@ -1,9 +1,9 @@
-import React, { useRef } from 'react';
+import React, { useRef, memo } from 'react';
 import flagIcon from '../assets/img/flag.svg';
 import markIcon from '../assets/img/mark.svg';
 import mineIcon from '../assets/img/mine.svg';
 
-export const Cell = ({ cell, onClick, onContextMenu }) => {
+export const Cell = memo(function Cell({ cell, onReveal, onFlag }) {
   const timerRef = useRef(null);
   
   // Referencias para detectar el movimiento del dedo (Scroll)
@@ -54,28 +54,32 @@ export const Cell = ({ cell, onClick, onContextMenu }) => {
 
     // Si llegamos aquí, es un toque estático (intención de jugar)
     if (!timerRef.current) {
-      // PRIMER TOQUE
+      // PRIMER TOQUE — revelar celda
       timerRef.current = setTimeout(() => {
-        onClick(); // Revelar
+        onReveal(cell.id);
         timerRef.current = null;
-      }, 200); // Tu tiempo de 250ms
+      }, 200);
     } else {
       // SEGUNDO TOQUE (Doble tap para bandera)
       clearTimeout(timerRef.current);
       timerRef.current = null;
-      onContextMenu(e);
+      onFlag(e, cell.id);
     }
   };
 
   const handlePointerUp = (e) => {
     // El ratón no suele tener este problema de scroll accidental como el dedo
-    if (e.pointerType === 'mouse' && e.button === 0) onClick();
+    if (e.pointerType === 'mouse' && e.button === 0) onReveal(cell.id);
+  };
+
+  const handleContextMenu = (e) => {
+    onFlag(e, cell.id);
   };
 
   return (
     <div
       onPointerUp={handlePointerUp}
-      onContextMenu={onContextMenu}
+      onContextMenu={handleContextMenu}
       // Eventos táctiles refinados
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
@@ -84,8 +88,8 @@ export const Cell = ({ cell, onClick, onContextMenu }) => {
       className={`
         w-full h-full aspect-square tablet:w-7.5 tablet:h-7.5
         flex items-center justify-center text-xl select-none leading-none
-        ${cell.isRevealed 
-          ? 'bg-mines-white border border-mines-grey-light' 
+        ${cell.isRevealed
+          ? 'bg-mines-white border border-mines-grey-light'
           : 'bg-mines-grey-superlight border-cell-normal hover:bg-mines-grey-light active:bg-mines-grey-dark'
         }
       `}
@@ -108,4 +112,4 @@ export const Cell = ({ cell, onClick, onContextMenu }) => {
       )}
     </div>
   );
-};
+});
